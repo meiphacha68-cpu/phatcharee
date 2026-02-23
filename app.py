@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 # สร้างแอป Flask
 app = Flask(__name__)
@@ -26,6 +27,35 @@ class Product(db.Model):
 
     def __repr__(self):
         return f"<Product {self.name}>"
+
+
+# =========================
+# สร้าง Model (ตารางคำสั่งซื้อ)
+# =========================
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    total_amount = db.Column(db.Float, nullable=False)
+    payment_method = db.Column(db.String(100), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    items = db.relationship('OrderItem', backref='order', lazy=True)
+
+    def __repr__(self):
+        return f"<Order {self.id}>"
+
+
+# =========================
+# สร้าง Model (รายการสินค้าในคำสั่งซื้อ)
+# =========================
+class OrderItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
+    product_name = db.Column(db.String(200), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"<OrderItem {self.product_name}>"
 
 
 # =========================
@@ -219,13 +249,57 @@ def remove_from_cart(id):
 def checkout():
     if request.method == "POST":
         payment_method = request.form.get("payment", "เก็บเงินปลายทาง")
+        cart = session.get("cart", {})
+
+        if not cart:
+            return redirect(url_for("home"))
+
+        # คำนวณยอดรวม
+        total = 0
+        order_items_data = []
         
+        for product_id, quantity in cart.items():
+            product = Product.query.get(int(product_id))
+            if product:
+                subtotal = product.price * quantity
+                total += subtotal
+                order_items_data.append({
+                    "product_name": product.name,
+                    "price": product.price,
+                    "quantity": quantity
+                })
+
+        # สร้างคำสั่งซื้อใหม่
+        order = Order(total_amount=total, payment_method=payment_method)
+        db.session.add(order)
+        db.session.flush()  # ดึง order.id ก่อยเสร็จ
+
+        # เพิ่มรายการสินค้า
+        for item_data in order_items_data:
+            order_item = OrderItem(
+                order_id=order.id,
+                product_name=item_data["product_name"],
+                price=item_data["price"],
+                quantity=item_data["quantity"]
+            )
+            db.session.add(order_item)
+
+        db.session.commit()
         session.pop("cart", None)  # ล้างตะกร้า
         session.modified = True
-        
-        return render_template("success.html", payment_method=payment_method)
+
+        return render_template("success.html", payment_method=payment_method, order_id=order.id)
 
     return render_template("checkout.html")
+
+
+# =========================
+# เส้นทาง Order History
+# =========================
+@app.route("/orders")
+def orders():
+    all_orders = Order.query.order_by(Order.created_at.desc()).all()
+    return render_template("orders.html", orders=all_orders)
 
 
 if __name__ == "__main__":

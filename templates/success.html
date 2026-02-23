@@ -73,6 +73,13 @@
                     <p class="payment-method">{{ payment_method }}</p>
                 </div>
 
+                {% if order_id %}
+                <div class="payment-info">
+                    <p class="mb-2 text-muted">หมายเลขคำสั่งซื้อ</p>
+                    <p class="payment-method">#{{ order_id }}</p>
+                </div>
+                {% endif %}
+
                 <p class="text-muted small mt-4">
                     📧 เรายังส่งรายละเอียดการสั่งซื้อไปยังอีเมลของคุณ
                 </p>
@@ -83,6 +90,10 @@
                 <div class="mt-4">
                     <a href="/" class="btn btn-home">
                         🏠 กลับหน้าหลัก
+                    </a>
+                    <br><br>
+                    <a href="/orders" class="btn btn-outline-info">
+                        📋 ดูประวัติการสั่งซื้อ
                     </a>
                 </div>
             </div>
