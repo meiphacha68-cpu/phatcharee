@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ชำระเงินสำเร็จ</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background: linear-gradient(135deg, #ff8fab 0%, #ff6f91 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .success-card {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        background: white;
+    }
+    .success-icon {
+        font-size: 80px;
+        color: #28a745;
+        margin-bottom: 20px;
+    }
+    h2 {
+        color: #ff6f91;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+    .payment-info {
+        background-color: #f8f9fa;
+        border-left: 4px solid #ff8fab;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+    .payment-method {
+        font-size: 1.1rem;
+        color: #333;
+        font-weight: 600;
+    }
+    .btn-home {
+        background: linear-gradient(135deg, #ff8fab 0%, #ff6f91 100%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 40px;
+        font-weight: bold;
+    }
+    .btn-home:hover {
+        background: linear-gradient(135deg, #ff6f91 0%, #ff5a7d 100%);
+        color: white;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="success-card p-5 text-center">
+                <div class="success-icon">
+                    ✅
+                </div>
+                <h2>ชำระเงินสำเร็จ!</h2>
+                <p class="text-muted" style="font-size: 1rem;">
+                    ขอบคุณที่สั่งซื้อสินค้ากับเรา 💖
+                </p>
+                
+                <div class="payment-info">
+                    <p class="mb-2 text-muted">วิธีการชำระเงิน</p>
+                    <p class="payment-method">{{ payment_method }}</p>
+                </div>
+
+                <p class="text-muted small mt-4">
+                    📧 เรายังส่งรายละเอียดการสั่งซื้อไปยังอีเมลของคุณ
+                </p>
+                <p class="text-muted small">
+                    🚚 เราจะส่งสินค้าไปให้คุณโดยเร็วที่สุด
+                </p>
+
+                <div class="mt-4">
+                    <a href="/" class="btn btn-home">
+                        🏠 กลับหน้าหลัก
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

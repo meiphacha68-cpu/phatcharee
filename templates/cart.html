@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ตะกร้าสินค้า</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #fff5f9;
+    }
+    .container {
+        margin-top: 30px;
+    }
+    h3 {
+        color: #ff6f91;
+        font-weight: 700;
+    }
+    .table {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .btn-remove {
+        background-color: #ff6f91;
+        color: white;
+        border: none;
+    }
+    .btn-remove:hover {
+        background-color: #ff5a7d;
+        color: white;
+    }
+    .total-section {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+    .btn-checkout {
+        background: linear-gradient(135deg, #ff8fab 0%, #ff6f91 100%);
+        color: white;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 25px;
+        font-weight: bold;
+    }
+    .btn-checkout:hover {
+        background: linear-gradient(135deg, #ff6f91 0%, #ff5a7d 100%);
+        color: white;
+    }
+    .empty-cart {
+        text-align: center;
+        padding: 50px 20px;
+    }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #ffffff; box-shadow: 0 2px 15px rgba(255, 182, 193, 0.25);">
+    <div class="container">
+        <a class="navbar-brand" href="/" style="color: #ff6f91; font-weight: bold;">💗 ร้านหวานละมุน</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="/">หน้าแรก</a></li>
+                <li class="nav-item"><a class="nav-link" href="/cart" style="color: #ff6f91; font-weight: 600;">ตะกร้า 🛒</a></li>
+                <li class="nav-item"><a class="nav-link" href="/login">Admin 🔐</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h3 class="mb-4">🛒 ตะกร้าสินค้า</h3>
+
+    {% if products %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>สินค้า</th>
+                    <th>ราคาต่อหน่วย</th>
+                    <th>จำนวน</th>
+                    <th>ราคารวม</th>
+                    <th>การกระทำ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in products %}
+                <tr>
+                    <td><strong>{{ item.product.name }}</strong></td>
+                    <td>฿{{ "{:,.0f}".format(item.product.price) }}</td>
+                    <td><span class="badge bg-info">{{ item.quantity }}</span></td>
+                    <td><strong style="color: #ff6f91;">฿{{ "{:,.0f}".format(item.subtotal) }}</strong></td>
+                    <td>
+                        <a href="/remove_from_cart/{{ item.product.id }}" 
+                           class="btn btn-remove btn-sm"
+                           onclick="return confirm('ลบสินค้า &quot;{{ item.product.name }}&quot; ออกจากตะกร้า?')">
+                           🗑️ ลบ
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ส่วนราคารวม -->
+    <div class="total-section">
+        <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between mb-3">
+                    <h5>รวมทั้งหมด:</h5>
+                    <h5 style="color: #ff6f91;">฿{{ "{:,.0f}".format(total) }}</h5>
+                </div>
+                <div class="d-grid gap-2">
+                    <a href="/checkout" class="btn btn-checkout">
+                        ✅ ดำเนินการชำระเงิน
+                    </a>
+                    <a href="/" class="btn btn-outline-secondary">
+                        ← ดำเนินการซื้อเพิ่มเติม
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="empty-cart">
+        <div class="card p-5 shadow-sm">
+            <h4 style="color: #ff6f91;">😢 ตะกร้าว่างเปล่า</h4>
+            <p class="text-muted mt-3">ยังไม่มีสินค้าในตะกร้า ไปเลือกซื้อสินค้ากัน!</p>
+            <a href="/" class="btn btn-pink mt-3" style="background-color: #ff8fab; color: white; border: none; border-radius: 25px; padding: 10px 30px;">
+                🛍️ ไปเลือกซื้อสินค้า
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
